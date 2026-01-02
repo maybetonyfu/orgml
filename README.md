@@ -1,4 +1,4 @@
-# orgml.el - JSON to Org Document Converter
+# orgml.el - Explore JSON data in org-mode
 
 Convert JSON data into Org mode documents.
 
@@ -22,7 +22,7 @@ Orgml displays json data in the org-mode format. This allows data exploration us
   :vc (:url "https://github.com/maybetonyfu/orgml.git"
        :branch "main")
   :commands (orgml-new-buffer orgml-json-to-org)
-  :bind ("C-c j o" . orgml-new-buffer))
+  :bind ("C-c j o" . orgml-new-buffer)) ;; An example keybinding
 ```
 
 ### Using straight.el
@@ -33,12 +33,12 @@ Orgml displays json data in the org-mode format. This allows data exploration us
              :repo "maybetonyfu/orgml"
              :branch "main")
   :commands (orgml-new-buffer orgml-json-to-org)
-  :bind ("C-c j o" . orgml-new-buffer))
+  :bind ("C-c j o" . orgml-new-buffer)) ;; An example keybinding
 ```
 
 
 ## Usage
-Run `M-x orgml-new-buffer` on a active region (the whole buffer will be used if no active region found). A new buffer will be created, displaying the data in org-mode headline format.
+Run `M-x orgml-new-buffer`, (`C-c j o` or other keybinding you have customized) on a active region. The whole buffer will be used if no active region found. A new read-only buffer will be created, displaying the data in org-mode headline format.
 
 ### Example
 
