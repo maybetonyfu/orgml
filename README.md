@@ -77,3 +77,7 @@ will generate an org buffer with the following content:
 | Null | `* null :null:` | `null` → `* null :null:` |
 | Array | `* ~[N items]~` with sub-items | `[1,2]` → `* ~[2 items]~`<br>`** 1 :number:`<br>`** 2 :number:` |
 | Object | `* ~{N items}~` with key-value pairs | `{"key": "value"}` → `* ~{1 item}~`<br>`** =key=: value :string:` |
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
