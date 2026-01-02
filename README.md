@@ -2,6 +2,8 @@
 
 Convert JSON data into Org mode documents.
 
+![Screenshot](./screenshot.png)
+
 ## Why orgml.el when there is json-mode and json-ts-mode?
 
 Orgml displays json data in the org-mode format. This allows data exploration using the tools we already familiar with, such as org visibility cycling and sparse tree.

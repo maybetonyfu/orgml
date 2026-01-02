@@ -28,31 +28,31 @@ Returns org document string."
   (cond
    ((numberp value)
     (orgml--make-heading level (number-to-string value) "number"))
-   
+
    ((stringp value)
     (orgml--make-heading level value "string"))
-   
+
    ((eq value t)
     (orgml--make-heading level "t" "bool"))
-   
+
    ((eq value :json-false)
     (orgml--make-heading level "false" "bool"))
-   
+
    ((eq value json-null)
     (orgml--make-heading level "null" "null"))
-   
+
    ((vectorp value)
     (orgml--convert-array value level))
-   
+
    ((hash-table-p value)
     (orgml--convert-object value level))
-   
+
    ((listp value)
     ;; Handle alist (key-value pairs)
     (if (orgml--is-alist value)
         (orgml--convert-alist value level)
       (orgml--convert-list value level)))
-   
+
    (t
     (orgml--make-heading level (format "%S" value) "unknown"))))
 
@@ -61,7 +61,7 @@ Returns org document string."
   (let* ((array-length (length array))
          (result (orgml--make-heading level (orgml--format-array-heading array-length) nil)))
     (dotimes (i array-length)
-      (setq result (concat result "\n" 
+      (setq result (concat result "\n"
                            (orgml--convert-value (aref array i) (+ level 1)))))
     result))
 
@@ -70,7 +70,7 @@ Returns org document string."
   (let* ((list-length (length list))
          (result (orgml--make-heading level (orgml--format-array-heading list-length) nil)))
     (dolist (item list)
-      (setq result (concat result "\n" 
+      (setq result (concat result "\n"
                            (orgml--convert-value item (+ level 1)))))
     result))
 
@@ -80,8 +80,8 @@ Returns org document string."
          (result (orgml--make-heading level (orgml--format-object-heading object-size) nil)))
     (maphash (lambda (key value)
                (let ((key-str (if (symbolp key) (symbol-name key) (format "%s" key))))
-                 (setq result (concat result "\n" 
-                                      (orgml--make-key-value-heading 
+                 (setq result (concat result "\n"
+                                      (orgml--make-key-value-heading
                                        (+ level 1) key-str value)))))
              hash-table)
     result))
@@ -94,8 +94,8 @@ Returns org document string."
       (let ((key (car pair))
             (value (cdr pair)))
         (let ((key-str (if (symbolp key) (symbol-name key) (format "%s" key))))
-          (setq result (concat result "\n" 
-                               (orgml--make-key-value-heading 
+          (setq result (concat result "\n"
+                               (orgml--make-key-value-heading
                                 (+ level 1) key-str value))))))
     result))
 
@@ -116,10 +116,10 @@ Returns org document string."
              (result (format "%s =%s=: %s" stars key (orgml--format-array-heading array-length))))
         (if (vectorp value)
             (dotimes (i (length value))
-              (setq result (concat result "\n" 
+              (setq result (concat result "\n"
                                    (orgml--convert-value (aref value i) (+ level 1)))))
           (dolist (item value)
-            (setq result (concat result "\n" 
+            (setq result (concat result "\n"
                                  (orgml--convert-value item (+ level 1))))))
         result))
      ((or (hash-table-p value) (orgml--is-alist value))
@@ -129,16 +129,16 @@ Returns org document string."
         (if (hash-table-p value)
             (maphash (lambda (k v)
                        (let ((key-str (if (symbolp k) (symbol-name k) (format "%s" k))))
-                         (setq result (concat result "\n" 
-                                              (orgml--make-key-value-heading 
+                         (setq result (concat result "\n"
+                                              (orgml--make-key-value-heading
                                                (+ level 1) key-str v)))))
                      value)
           (dolist (pair value)
             (let ((k (car pair))
                   (v (cdr pair)))
               (let ((key-str (if (symbolp k) (symbol-name k) (format "%s" k))))
-                (setq result (concat result "\n" 
-                                     (orgml--make-key-value-heading 
+                (setq result (concat result "\n"
+                                     (orgml--make-key-value-heading
                                       (+ level 1) key-str v)))))))
         result))
      (t
@@ -152,7 +152,7 @@ Returns org document string."
   (cond
    ((numberp value) (number-to-string value))
    ((stringp value) value)
-   ((eq value t) "t")
+   ((eq value t) "true")
    ((eq value :json-false) "false")
    ((eq value json-null) "null")
    (t (format "%S" value))))
@@ -213,5 +213,3 @@ Creates a new window with a readonly buffer displaying the converted org content
 (provide 'orgml)
 
 ;;; orgml.el ends here
-
-
