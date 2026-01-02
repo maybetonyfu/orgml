@@ -38,7 +38,7 @@ Orgml displays json data in the org-mode format. This allows data exploration us
 
 
 ## Usage
-Run `M-x orgml-new-buffer` on a active region (the whole buffer will be used if no active region found). A new buffer will be 
+Run `M-x orgml-new-buffer` on a active region (the whole buffer will be used if no active region found). A new buffer will be created, displaying the data in org-mode headline format.
 
 ### Example
 
@@ -49,7 +49,7 @@ Run `orgml-new-buffer on the json string below,
      "age": 30,
      "skills": ["JavaScript", "Python", "Emacs Lisp"],
      "active": true,
-     "alias": [],
+     "aliases": [],
      "profile": null
    }
    ```
@@ -62,7 +62,8 @@ will generate an org buffer with the following content:
 *** JavaScript :string:
 *** Python :string:
 *** Emacs Lisp :string:
-** =active=: t :bool:
+** =active=: true :bool:
+** =aliases=: ~[empty]~
 ** =profile=: null :null:
 ```
 
@@ -76,7 +77,3 @@ will generate an org buffer with the following content:
 | Null | `* null :null:` | `null` → `* null :null:` |
 | Array | `* ~[N items]~` with sub-items | `[1,2]` → `* ~[2 items]~`<br>`** 1 :number:`<br>`** 2 :number:` |
 | Object | `* ~{N items}~` with key-value pairs | `{"key": "value"}` → `* ~{1 item}~`<br>`** =key=: value :string:` |
-
-## License
-
-This package is provided as-is for educational and practical use.
