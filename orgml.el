@@ -20,8 +20,11 @@ The conversion follows these rules:
 - Objects become ~object~ heading with key-value pairs
 
 Returns org document string."
-  (let ((data (json-read-from-string json-string)))
-    (orgml--convert-value data 1)))
+  (let ((json-object-type 'hash-table)
+        (json-array-type 'vector)
+        (json-key-type 'string))
+    (let ((data (json-read-from-string json-string)))
+      (orgml--convert-value data 1))))
 
 (defun orgml--convert-value (value level)
   "Convert VALUE to org format at heading LEVEL."
@@ -47,12 +50,6 @@ Returns org document string."
    ((hash-table-p value)
     (orgml--convert-object value level))
 
-   ((listp value)
-    ;; Handle alist (key-value pairs)
-    (if (orgml--is-alist value)
-        (orgml--convert-alist value level)
-      (orgml--convert-list value level)))
-
    (t
     (orgml--make-heading level (format "%S" value) "unknown"))))
 
@@ -65,14 +62,6 @@ Returns org document string."
                            (orgml--convert-value (aref array i) (+ level 1)))))
     result))
 
-(defun orgml--convert-list (list level)
-  "Convert LIST to org format at LEVEL."
-  (let* ((list-length (length list))
-         (result (orgml--make-heading level (orgml--format-array-heading list-length) nil)))
-    (dolist (item list)
-      (setq result (concat result "\n"
-                           (orgml--convert-value item (+ level 1)))))
-    result))
 
 (defun orgml--convert-object (hash-table level)
   "Convert HASH-TABLE (object) to org format at LEVEL."
@@ -86,18 +75,6 @@ Returns org document string."
              hash-table)
     result))
 
-(defun orgml--convert-alist (alist level)
-  "Convert ALIST (association list) to org format at LEVEL."
-  (let* ((alist-length (length alist))
-         (result (orgml--make-heading level (orgml--format-object-heading alist-length) nil)))
-    (dolist (pair alist)
-      (let ((key (car pair))
-            (value (cdr pair)))
-        (let ((key-str (if (symbolp key) (symbol-name key) (format "%s" key))))
-          (setq result (concat result "\n"
-                               (orgml--make-key-value-heading
-                                (+ level 1) key-str value))))))
-    result))
 
 (defun orgml--make-heading (level text tag)
   "Create org heading at LEVEL with TEXT and optional TAG."
@@ -110,36 +87,24 @@ Returns org document string."
   "Create org heading at LEVEL for KEY-VALUE pair."
   (let ((stars (make-string level ?*)))
     (cond
-     ((or (vectorp value) (and (listp value) (not (eq value json-null)) (not (orgml--is-alist value))))
+     ((vectorp value)
       ;; For arrays, create heading with ~array~ and expand items
-      (let* ((array-length (if (vectorp value) (length value) (length value)))
+      (let* ((array-length (length value))
              (result (format "%s =%s=: %s" stars key (orgml--format-array-heading array-length))))
-        (if (vectorp value)
-            (dotimes (i (length value))
-              (setq result (concat result "\n"
-                                   (orgml--convert-value (aref value i) (+ level 1)))))
-          (dolist (item value)
-            (setq result (concat result "\n"
-                                 (orgml--convert-value item (+ level 1))))))
+        (dotimes (i (length value))
+          (setq result (concat result "\n"
+                               (orgml--convert-value (aref value i) (+ level 1)))))
         result))
-     ((or (hash-table-p value) (orgml--is-alist value))
+     ((hash-table-p value)
       ;; For objects, create heading with ~object~ and expand key-value pairs
-      (let* ((object-length (if (hash-table-p value) (hash-table-count value) (length value)))
+      (let* ((object-length (hash-table-count value))
              (result (format "%s =%s=: %s" stars key (orgml--format-object-heading object-length))))
-        (if (hash-table-p value)
-            (maphash (lambda (k v)
-                       (let ((key-str (if (symbolp k) (symbol-name k) (format "%s" k))))
-                         (setq result (concat result "\n"
-                                              (orgml--make-key-value-heading
-                                               (+ level 1) key-str v)))))
-                     value)
-          (dolist (pair value)
-            (let ((k (car pair))
-                  (v (cdr pair)))
-              (let ((key-str (if (symbolp k) (symbol-name k) (format "%s" k))))
-                (setq result (concat result "\n"
-                                     (orgml--make-key-value-heading
-                                      (+ level 1) key-str v)))))))
+        (maphash (lambda (k v)
+                   (let ((key-str (if (symbolp k) (symbol-name k) (format "%s" k))))
+                     (setq result (concat result "\n"
+                                          (orgml--make-key-value-heading
+                                           (+ level 1) key-str v)))))
+                 value)
         result))
      (t
       ;; For primitive values, use inline format
@@ -167,14 +132,8 @@ Returns org document string."
    ((eq value json-null) "null")
    ((vectorp value) "array")
    ((hash-table-p value) "object")
-   ((listp value) "array")
    (t "unknown")))
 
-(defun orgml--is-alist (list)
-  "Check if LIST is an association list (list of cons cells)."
-  (and (listp list)
-       (not (null list))
-       (cl-every (lambda (x) (consp x)) list)))
 
 (defun orgml--format-array-heading (length)
   "Format array heading with LENGTH information."

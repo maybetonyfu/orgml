@@ -1,12 +1,12 @@
 # orgml.el - JSON exploration in org-mode
 
-Convert JSON data into Org mode documents.
+An emacs JSON tree viewer you already mastered, inside org-mode.
 
 ![Screenshot](./screenshot.png)
 
-## Why orgml.el when there is json-mode and json-ts-mode?
+## Why orgml.el?
 
-Orgml displays json data in org-mode format. This allows data exploration with the tools we are already familiar with, such as org visibility cycling, and sparse tree..
+Emacs has limited option for navigating and exploring JSON data. Existing solutions include `json-navigator`, which uses `hierarchy.el` for creating tree view. Orgml displays json data in org-mode format. This allows data exploration with the tools we are already familiar with, such as org visibility cycling, and sparse tree..
 
 ## Installation
 
@@ -21,7 +21,6 @@ Orgml displays json data in org-mode format. This allows data exploration with t
 (use-package orgml
   :vc (:url "https://github.com/maybetonyfu/orgml.git"
        :branch "main")
-  :commands (orgml-new-buffer orgml-json-to-org)
   :bind ("C-c j o" . orgml-new-buffer)) ;; An example keybinding
 ```
 
@@ -32,7 +31,6 @@ Orgml displays json data in org-mode format. This allows data exploration with t
   :straight (:host github 
              :repo "maybetonyfu/orgml"
              :branch "main")
-  :commands (orgml-new-buffer orgml-json-to-org)
   :bind ("C-c j o" . orgml-new-buffer)) ;; An example keybinding
 ```
 
@@ -50,7 +48,8 @@ Run `orgml-new-buffer on the json string below:
      "skills": ["JavaScript", "Python", "Emacs Lisp"],
      "active": true,
      "aliases": [],
-     "profile": null
+     "profile": null,
+     "custom_data": {}
    }
    ```
 
@@ -66,18 +65,19 @@ This will generate an org buffer with the following content:
 ** =active=: true :bool:
 ** =aliases=: ~[empty]~
 ** =profile=: null :null:
+** =profile=: ~{empty}~
 ```
 
 ## Conversion Rules
 
-| JSON Type | Org Format | Example |
-|-----------|------------|---------|
-| Number | `* 42 :number:` | `42` → `* 42 :number:` |
-| String | `* hello :string:` | `"hello"` → `* hello :string:` |
-| Boolean | `* true :bool:` | `true` → `* t :bool:` |
-| Null | `* null :null:` | `null` → `* null :null:` |
-| Array | `* ~[N items]~` with sub-items | `[1,2]` → `* ~[2 items]~`<br>`** 1 :number:`<br>`** 2 :number:` |
-| Object | `* ~{N items}~` with key-value pairs | `{"key": "value"}` → `* ~{1 item}~`<br>`** =key=: value :string:` |
+| JSON Type | Org Format                           | Example                                                           |
+|-----------|--------------------------------------|-------------------------------------------------------------------|
+| Number    | `* 42 :number:`                      | `42` → `* 42 :number:`                                            |
+| String    | `* hello :string:`                   | `"hello"` → `* hello :string:`                                    |
+| Boolean   | `* true :bool:`                      | `true` → `* t :bool:`                                             |
+| Null      | `* null :null:`                      | `null` → `* null :null:`                                          |
+| Array     | `* ~[N items]~` with sub-items       | `[1,2]` → `* ~[2 items]~`<br>`** 1 :number:`<br>`** 2 :number:`   |
+| Object    | `* ~{N items}~` with key-value pairs | `{"key": "value"}` → `* ~{1 item}~`<br>`** =key=: value :string:` |
 
 ## License
 
