@@ -1,4 +1,4 @@
-;;; orgml.el --- JSON to Org document converter
+;;; orgml.el --- JSON to Org document converter -*- lexical-binding: t;-*-
 
 ;;; Commentary:
 ;; This package provides functionality to convert JSON strings into
@@ -33,7 +33,7 @@ Returns org document string."
     (orgml--make-heading level value "string"))
 
    ((eq value t)
-    (orgml--make-heading level "t" "bool"))
+    (orgml--make-heading level "true" "bool"))
 
    ((eq value :json-false)
     (orgml--make-heading level "false" "bool"))
@@ -205,6 +205,7 @@ Creates a new window with a readonly buffer displaying the converted org content
       (erase-buffer)
       (insert org-content)
       (org-mode)
+      (org-indent-mode)
       (setq buffer-read-only t)
       (goto-char (point-min))
       (display-buffer (current-buffer) '((display-buffer-pop-up-window))))

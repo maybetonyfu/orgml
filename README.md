@@ -1,4 +1,4 @@
-# orgml.el - Explore JSON data in org-mode
+# orgml.el - JSON exploration in org-mode
 
 Convert JSON data into Org mode documents.
 
@@ -6,7 +6,7 @@ Convert JSON data into Org mode documents.
 
 ## Why orgml.el when there is json-mode and json-ts-mode?
 
-Orgml displays json data in the org-mode format. This allows data exploration using the tools we already familiar with, such as org visibility cycling and sparse tree.
+Orgml displays json data in org-mode format. This allows data exploration with the tools we are already familiar with, such as org visibility cycling, and sparse tree..
 
 ## Installation
 
@@ -38,11 +38,11 @@ Orgml displays json data in the org-mode format. This allows data exploration us
 
 
 ## Usage
-Run `M-x orgml-new-buffer`, (`C-c j o` or other keybinding you have customized) on a active region. The whole buffer will be used if no active region found. A new read-only buffer will be created, displaying the data in org-mode headline format.
+Run `M-x orgml-new-buffer`, (`C-c j o` or other keybinding you have customized) on an active region. The whole buffer will be used if no active region found. This will create a new read-only, displaying the JSON data in the familiar org-mode headline format.
 
 ### Example
 
-Run `orgml-new-buffer on the json string below,
+Run `orgml-new-buffer on the json string below:
    ```json
    {
      "name": "John Doe",
@@ -53,7 +53,8 @@ Run `orgml-new-buffer on the json string below,
      "profile": null
    }
    ```
-will generate an org buffer with the following content:
+
+This will generate an org buffer with the following content:
 ```org
 * ~{5 items}~
 ** =name=: John Doe :string:
@@ -80,4 +81,4 @@ will generate an org buffer with the following content:
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GPL-3.0 License - see the [LICENSE](LICENSE) file for details.
