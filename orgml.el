@@ -149,6 +149,11 @@ Returns org document string."
    ((= length 1) "~{1 item}~")
    (t (format "~{%d items}~" length))))
 
+(defun orgml-quit-window ()
+  "Close the current window and kill the buffer."
+  (interactive)
+  (quit-window t))
+
 (defun orgml-new-buffer ()
   "Convert JSON from active region (or entire buffer) to org format in new readonly buffer.
 Creates a new window with a readonly buffer displaying the converted org content."
@@ -166,6 +171,9 @@ Creates a new window with a readonly buffer displaying the converted org content
       (org-mode)
       (org-indent-mode)
       (setq buffer-read-only t)
+      ;; Set up local keymap to handle 'q' for closing window
+      (use-local-map (copy-keymap (current-local-map)))
+      (local-set-key (kbd "q") 'orgml-quit-window)
       (goto-char (point-min))
       (display-buffer (current-buffer) '((display-buffer-pop-up-window))))
     (message "Converted JSON to org format in buffer: %s" buffer-name)))
